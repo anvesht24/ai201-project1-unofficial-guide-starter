@@ -13,6 +13,8 @@
      Why is this knowledge valuable, and why is it hard to find through official channels?
      Example: "Student reviews of CS professors at [university] — useful because official
      course descriptions don't reflect teaching style, exam difficulty, or workload." -->
+Student reviews of professors and courses at Florida Atlantic University
+Students often pick classes without knowing what they're really like — the official catalog covers the syllabus, not the teaching, grading, or workload. This Unofficial Guide answers questions about professors and courses at Florida Atlantic University using real student reviews, with sources cited for every answer. It turns scattered, hard-to-find student feedback into clear, trustworthy answers students can actually use to plan their semester.
 
 ---
 
@@ -24,16 +26,16 @@
 
 | # | Source | Type | URL or file path |
 |---|--------|------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 | Rate my Professors| Student reviews of Prof. Ali Ibrahim |https://www.ratemyprofessors.com/professor/2832618|
+| 2 | Coursicle| Student reviews of Prof. Ankur Agarwal | https://www.coursicle.com/fau/?professor=Ankur+Agarwal&type=reviews |
+| 3 | Rate my Professors| Student reviews of Prof. Chang Hwan-Lee | https://www.ratemyprofessors.com/professor/2963915 |
+| 4 | Rate my Professors| Student reviews of Prof. Fernando Koch | https://www.ratemyprofessors.com/professor/3026411 |
+| 5 | Rate my Professors| Student reviews of Prof. Hanqi Zhuang | https://www.ratemyprofessors.com/professor/1728251 |
+| 6 | Rate my Professors| Student reviews of Prof. Juan Yepes | https://www.ratemyprofessors.com/professor/2950560 |
+| 7 | Rate my Professors| Student reviews of Prof. Maria Petrie | https://www.ratemyprofessors.com/professor/1347714 |
+| 8 | Coursicle | Student reviews of Prof. Mihaela Cardei | https://www.coursicle.com/fau/?professor=Mihaela+Cardei&type=reviews |
+| 9 | Rate my Professors| Student reviews of Prof. Veilbor Adzic | https://www.ratemyprofessors.com/professor/2950560 |
+| 10 | Rate my Professors| Student reviews of Prof. Taghi Khoshgoftaar | https://www.ratemyprofessors.com/professor/105340
 
 ---
 
