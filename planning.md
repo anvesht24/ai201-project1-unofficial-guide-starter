@@ -78,8 +78,8 @@ If real users relied on this and cost wasn't a concern, I'd consider a stronger 
 | # | Question | Expected answer |
 |---|----------|-----------------|
 | 1 | What do students say about the dataset sizes and running the assignments in Ali Ibrahim's class? | The datasets are very large and some ML algorithms take a long time to run — one student said an assignment took hours to compile even on a decent computer. |
-| 2 | Do Ankur Agarwal respond to eamils? | Ankur Agarwal is very slow at replying to emails and slow in grading the assignments too. |
-| 3 | How do students describe Chang Hwan-Lee's lecture/teaching style? | Fast-paced, very math-heavy, hard to follow with weak explanations — some say attendance dropped to ~5–7 students; one notes lectures are optional since slides are posted. |
+| 2 | Do Ankur Agarwal respond to emails? | Ankur Agarwal is very slow at replying to emails and slow in grading the assignments too. |
+| 3 | How do students describe Chang Hwan-Lee's lecture?/teaching style? | Fast-paced, very math-heavy, hard to follow with weak explanations — some say attendance dropped to ~5–7 students; one notes lectures are optional since slides are posted. |
 | 4 | How do students describe Cardei's teaching of difficult topics? | Clear and organized; she makes hard subjects (Automata, Algorithms/Data Structures) easier to grasp and re-explains in office hours. |
 | 5 | Do students agree on whether Khoshgoftaar is a good professor? | No — strongly split: some say he's fair, high-expectations, and you learn a lot; others call him egocentric, biased, disorganized, with unclear grading. |
 
