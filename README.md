@@ -53,13 +53,17 @@ Students often pick classes without knowing what they're really like — the off
 Small — one student review per chunk, roughly 300–600 characters.
 
 **Overlap:**
+
 None
 
 **Why these choices fit your documents:**
+
 My documents are collections of individual student reviews, and each review is a short, self-contained opinion — one talks about grading, another about workload, another about teaching style. They don't flow into each other, so I split on the blank lines between reviews, making each review its own chunk. I avoided a fixed character split because it would cut reviews in half or merge two unrelated opinions into one chunk, which would hurt retrieval. I used no overlap because overlap exists to keep a continuous idea from breaking across chunks, but my reviews are already independent, so overlap would only duplicate text and add noise. Before chunking, I also separated the header lines (Source and Professor) from the review text and stored them as metadata, so the professor name and source URL travel with each chunk for citations.
 
 **Final chunk count:**
+
 65 chunks across 10 documents.
+
 ---
 
 ## Embedding Model
@@ -71,9 +75,11 @@ My documents are collections of individual student reviews, and each review is a
      latency, and local vs. API-hosted. -->
 
 **Model used:**
+
 all-MiniLM-L6-v2, via sentence-transformers. I chose it because it runs locally with no API key and no rate limits, it's fast, and it works well on short text like student reviews — which made it a good fit for a free-stack project where my documents are all brief.
 
 **Production tradeoff reflection:**
+
 If real users relied on this and cost wasn't a concern, I'd consider a stronger model for a few reasons. First, accuracy: reviews use slang and sarcasm ("easy A," "weeder class"), and a more advanced model might understand that tone better. Second, context length: MiniLM handles short text well, but if I later added long guides or syllabi, I'd need a model that accepts longer input. Third, local vs API: an API-hosted model might be more accurate, but it adds cost, latency, and a privacy concern, since I'd be sending user questions to an outside server.
 ---
 
@@ -87,9 +93,11 @@ If real users relied on this and cost wasn't a concern, I'd consider a stronger 
      the mechanism. -->
 
 **System prompt grounding instruction:**
+
 The system prompt tells the model to answer using only the provided reviews, to reply "I don't have enough information on that." if they don't cover it, and not to use outside knowledge. The retrieved chunks are passed in as a labeled "Context:" block before the question, so the documents are the only material it has. Tested with an off-topic question (campus parking). It correctly refused instead of making something up.
 
 **How source attribution is surfaced in the response:**
+
 After retrieval, my code reads each chunk's metadata (professor + URL) and builds a deduplicated source list shown in the "Retrieved from" panel. Because it's built in code from metadata, citations are guaranteed rather than left to the LLM.
 ---
 
@@ -126,9 +134,11 @@ After retrieval, my code reads each chunk's metadata (professor + URL) and build
      results from an unrelated review" is an explanation. -->
 
 **Question that failed:**
+
 "Do students agree on whether Khoshgoftaar is a good professor?"
 
 **What the system returned:**
+
 "I don't have enough information on that. There is only one review of Taghi Khoshgoftaar, so I cannot compare opinions."
 
 **Root cause (tied to a specific pipeline stage):**
@@ -136,6 +146,7 @@ After retrieval, my code reads each chunk's metadata (professor + URL) and build
 The failure happened at the retrieval stage, because of my top-k = 5 setting. Khoshgoftaar has far more than five reviews in my corpus, and they're split between people who think he's fair and demanding and people who think he's disorganized and biased. But retrieval only passes the 5 nearest chunks to the LLM, and for this query those 5 happened to land on a narrow slice of his reviews instead of the full range of opinion. So the model never actually saw the disagreement — from the limited context it was handed, there really did look like there was only one viewpoint. And it finally showed the grounding instruction which said it couldn't compare, rather than inventing a balanced answer. 
 
 **What you would change to fix it:**
+
 I would make retrieval adapt to the question. To my opinion, the fix is to raise top-k so more of a professor's reviews reach the model. A better fix is metadata filtering: when a question names a specific professor, retrieve all of that professor's chunks (using the professor metadata I already store) instead of just the global top 5, so the model sees the real spread of opinion before answering. This is also one of the stretch features, so I may implement it as an extension.
 ---
 
@@ -145,9 +156,11 @@ I would make retrieval adapt to the question. To my opinion, the fix is to raise
      Answer both questions with at least 2–3 sentences each. -->
 
 **One way the spec helped you during implementation:**
+
 Writing my Chunking Strategy in planning.md before I coded saved me a lot of trial and error. Because I'd already decided "one review = one chunk" based on reading my actual documents, I didn't waste time guessing at character counts when I built the chunker — I just implemented the rule I'd already reasoned out, and the chunk inspection passed on the first try. Having the architecture diagram also meant that at every stage I already knew what came next and which tool to use, so I was never stuck wondering what to build.
 
 **One way your implementation diverged from the spec, and why:**
+
 In planning.md I set top-k to 5 and assumed that was enough for any question. It worked well for specific questions, but my evaluation showed it wasn't enough for broad ones — when I asked whether students agreed about Khoshgoftaar, retrieval only returned 5 chunks that happened to cover one side, so the system thought there was just one opinion and refused to compare. That made me realize my spec's fixed top-k was an assumption that didn't hold for questions needing wide coverage of a single professor, which is something I'd change by adding professor-based filtering.
 ---
 
@@ -164,12 +177,17 @@ In planning.md I set top-k to 5 and assumed that was enough for any question. It
 
 **Instance 1**
 
-- *What I gave the AI:*My document structure (files of separate, short student reviews) and my Chunking Strategy from planning.md.
-- *What it produced:*Its first approach was a fixed character-count split — chunk every ~500 characters.
-- *What I changed or overrode:*I pushed back on that, because a blind character split would cut a review in half or merge two unrelated opinions into one chunk. I re-prompted it to split on the blank lines between reviews so each review became its own chunk, and to pull the header lines into metadata so the professor name and source URL stayed attached. After that change, my chunk inspection came back clean at 65 self-contained chunks.
+
+My document structure (files of separate, short student reviews) and my Chunking Strategy from planning.md.
+
+Its first approach was a fixed character-count split — chunk every ~500 characters.
+
+I pushed back on that, because a blind character split would cut a review in half or merge two unrelated opinions into one chunk. I re-prompted it to split on the blank lines between reviews so each review became its own chunk, and to pull the header lines into metadata so the professor name and source URL stayed attached. After that change, my chunk inspection came back clean at 65 self-contained chunks.
 
 **Instance 2**
 
-- *What I gave the AI:*My grounding requirement — answer only from the retrieved reviews, refuse when the documents don't cover it, and cite sources.
-- *What it produced:*A working generation function, but the first version leaned on the LLM to add citations itself and the grounding read more like a suggestion than a rule.
-- *What I changed or overrode:*I tightened the system prompt to command it (answer from context only, and a fixed "I don't have enough information on that." refusal), and I moved source attribution into my own code — building the list from each chunk's metadata so citations are guaranteed, not left to the model. I confirmed it worked by asking an off-topic question (campus parking) and watching it refuse instead of inventing an answer.
+My grounding requirement — answer only from the retrieved reviews, refuse when the documents don't cover it, and cite sources.
+
+A working generation function, but the first version leaned on the LLM to add citations itself and the grounding read more like a suggestion than a rule.
+
+I tightened the system prompt to command it (answer from context only, and a fixed "I don't have enough information on that." refusal), and I moved source attribution into my own code — building the list from each chunk's metadata so citations are guaranteed, not left to the model. I confirmed it worked by asking an off-topic question (campus parking) and watching it refuse instead of inventing an answer.
